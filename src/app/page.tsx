@@ -10,18 +10,20 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false;
-    try {
-      setIsLoading(true);
-      fetch("/api/advocates").then((response) => {
-        response.json().then((jsonResponse) => {
-          setAdvocates(jsonResponse.data);
+    (async () => {
+      try {
+        setIsLoading(true);
+        fetch("/api/advocates").then((response) => {
+          response.json().then((jsonResponse) => {
+            setAdvocates(jsonResponse.data);
+          });
         });
-      });
-    } catch (err) {
-      if (!cancelled) console.log(err);
-    } finally {
-      if (!cancelled) setIsLoading(false);
-    }
+      } catch (err) {
+        if (!cancelled) console.log(err);
+      } finally {
+        if (!cancelled) setIsLoading(false);
+      }
+    })();
     return () => {
       cancelled = true;
     };
