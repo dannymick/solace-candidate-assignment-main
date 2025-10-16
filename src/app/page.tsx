@@ -3,17 +3,21 @@
 import { useEffect, useMemo, useState } from "react";
 import type { Advocate } from "./types";
 
+const STEP = 10;
+const MAX_LIMIT = 30;
+
 export default function Home() {
   const [advocates, setAdvocates] = useState<Advocate[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [limit, setLimit] = useState(STEP);
 
   useEffect(() => {
     let cancelled = false;
     (async () => {
       try {
         setIsLoading(true);
-        fetch("/api/advocates").then((response) => {
+        fetch("/api/advocates?limit=" + limit).then((response) => {
           response.json().then((jsonResponse) => {
             setAdvocates(jsonResponse.data);
           });
@@ -27,7 +31,7 @@ export default function Home() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [limit]);
 
   const filteredAdvocates = useMemo(() => {
     const query = searchTerm.trim().toLowerCase();
@@ -71,6 +75,23 @@ export default function Home() {
         {filteredAdvocates.length > 0 || searchTerm !== "" ? (
           <span>Results: {filteredAdvocates.length}</span>
         ) : null}
+        <div style={{ marginTop: 16 }}>
+          <label>
+            Page size:&nbsp;
+            <select
+              value={limit}
+              onChange={(e) =>
+                setLimit(Math.min(Number(e.target.value), MAX_LIMIT))
+              }
+            >
+              {[10, 20, 30].map((n) => (
+                <option key={n} value={n}>
+                  {n}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
         {/* <button onClick={onSearchClick}>Search</button> */}
       </div>
       <table>
