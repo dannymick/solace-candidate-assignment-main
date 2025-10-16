@@ -59,30 +59,43 @@ export default function Home() {
   return isLoading ? (
     "Loading..."
   ) : (
-    <main style={{ margin: "24px" }}>
-      <h1>Solace Advocates</h1>
-      <div>
-        <h2>Search</h2>
-        <p>
-          Searching for: <span>{searchTerm}</span>
-        </p>
+    <main
+      style={{ margin: "24px" }}
+      className="mx-auto max-w-32xl flex flex-col gap-4 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
+    >
+      <h1 className="text-2xl font-bold">Solace Advocates</h1>
+      <div className="flex gap-4">
         <input
-          style={{ border: "1px solid black" }}
+          className="w-1/2 rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
           onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder="Search for advocates..."
           value={searchTerm}
         />
-        <button onClick={onResetClick}>Reset</button>
-        {filteredAdvocates.length > 0 || searchTerm !== "" ? (
-          <span>Results: {filteredAdvocates.length}</span>
-        ) : null}
+        <button
+          className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-100"
+          onClick={onResetClick}
+        >
+          Reset
+        </button>
+      </div>
+      <div>
+        <p className="text-sm text-gray-600">
+          Searching for: <span className="font-semibold">{searchTerm}</span>
+        </p>
         <div style={{ marginTop: 16 }}>
+          {filteredAdvocates.length > 0 || searchTerm !== "" ? (
+            <span className="text-sm text-gray-600">
+              Results: <b>{filteredAdvocates.length}&nbsp;</b>
+            </span>
+          ) : null}
           <label>
-            Page size:&nbsp;
+            <span className="text-sm text-gray-600">Page size:&nbsp;</span>
             <select
               value={limit}
               onChange={(e) =>
                 setLimit(Math.min(Number(e.target.value), MAX_LIMIT))
               }
+              className="rounded-md border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             >
               {[10, 20, 30].map((n) => (
                 <option key={n} value={n}>
@@ -92,40 +105,72 @@ export default function Home() {
             </select>
           </label>
         </div>
-        {/* <button onClick={onSearchClick}>Search</button> */}
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>City</th>
-            <th>Degree</th>
-            <th>Specialties</th>
-            <th>Years of Experience</th>
-            <th>Phone Number</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAdvocates.map((advocate) => {
-            return (
-              <tr key={advocate.id}>
-                <td>{advocate.firstName}</td>
-                <td>{advocate.lastName}</td>
-                <td>{advocate.city}</td>
-                <td>{advocate.degree}</td>
-                <td>
-                  {advocate.specialties.map((s, i) => (
-                    <div key={`${advocate.id}-specialty-${i}`}>{s}</div>
-                  ))}
-                </td>
-                <td>{advocate.yearsOfExperience}</td>
-                <td>{advocate.phoneNumber}</td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="overflow-hidden rounded-xl border border-gray-200">
+        <table className="w-full table-auto">
+          <thead>
+            <tr className="text-left p-4 border-b border-black bg-gray-200 mb-4">
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                First Name
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                Last Name
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                City
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                Degree
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                Specialties
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                Years of Experience
+              </th>
+              <th className="px-4 py-3 text-sm font-bold text-gray-700">
+                Phone Number
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredAdvocates.map((advocate, i) => {
+              return (
+                <tr
+                  key={advocate.id}
+                  className={`text-left ${i % 2 ? "bg-white" : "bg-gray-50"}`}
+                >
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.firstName}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.lastName}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.city}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.degree}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.specialties.map((s, i) => (
+                      <div key={`${advocate.id}-specialty-${i}`}>{s}</div>
+                    ))}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    {advocate.yearsOfExperience}
+                  </td>
+                  <td className="px-4 py-3 text-sm text-gray-900">
+                    <a href={`tel:${advocate.phoneNumber}`}>
+                      {advocate.phoneNumber}
+                    </a>
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </main>
   );
 }
